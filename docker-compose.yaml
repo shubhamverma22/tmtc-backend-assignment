@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # API Service
+  api:
+    build: .
+    container_name: travel-itinerary-api
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://localhost:27017/travel-itinerary
+      - JWT_SECRET='tmtcPlanner@2025'
+      - JWT_ACCESS_EXPIRATION=15m
+    depends_on:
+      - db
+    networks:
+      - travel-network
+
+  # MongoDB Service
+  db:
+    image: mongo:latest
+    container_name: travel-itinerary-db
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - travel-network
+
+# Volumes for MongoDB data persistence
+volumes:
+  mongodb_data:
+
+# Networks for container communication
+networks:
+  travel-network:
+    driver: bridge
